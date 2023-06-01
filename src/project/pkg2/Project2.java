@@ -36,10 +36,9 @@ public class Project2 {
          int val =0 ;
          while (true) {
              System.out.println("Vill du: \n1. Boka sittplats\n2. Hitta bokad plats\n3. Avboka plats \n4. beräkna vinsten \n 5. lista folk grupp \n 6. avsluta");
-              val = 0;
                 try {
                     val = scan.nextInt();
-                    if(val < 0 && val > 6) {
+                    if(val < 0 || val > 6) {
                         System.out.println("<ERROR: Välj ett av menyvalen tack.>");
                     } else {
                         break;
@@ -53,7 +52,15 @@ public class Project2 {
                 case 1: 
                     int platsval=0;
                     System.out.println("1: standard , 2: fönster");
-                    platsval= scan.nextInt();
+                    try{
+                       platsval= scan.nextInt(); 
+                                          
+                    }
+                    catch(Exception e){
+                        System.out.println("ange integer");
+                        continue;
+                    }
+
                     if (platsval==1){
                         standardseat(addpersonnumer());
                     }
@@ -75,30 +82,28 @@ public class Project2 {
                  break; 
                 case 6: 
                  System.out.println("du har avslutat programmet");
-                break;
+                System.exit(0);
             }
         }
 }
      private static int addpersonnumer(){
-        int personnummer=0;
-        System.out.print("Skriv in ditt personnummer (yyyymmdd): "); 
+        System.out.print("Enter your person number (yyyymmdd): ");
         try {
-         personnummer = scan.nextInt();
-         String persString = Integer.toString(personnummer);
-         int längd = persString.length();
-         if(längd == 8) {
-             System.out.println("du har person nummer"+ personnummer); 
-           } 
-         else {
-             System.out.println("<ERROR: Personnummer ej giltigt.>");
+         int personnummer = scan.nextInt();
+         String personNumberString = Integer.toString(personnummer);
+         if (personNumberString.length() == 8) {
+              System.out.println("Your person number is: " + personnummer);
+              return personnummer;
             }
-         return -1;
+         else {
+              System.out.println("<ERROR: Invalid person number.>");
+            }
         } 
         catch (Exception e) {
-           System.out.println("<ERROR: Personnummer ej giltigt.>");
-           scan.nextLine();
-         } 
-         return personnummer; 
+        System.out.println("<ERROR: Invalid person number.>");
+        scan.nextLine();
+        }
+       return -1; 
     }
 //En funktion för att hitta bokade platser inom att gå inom fätet och hitta indexet som innehåller personnumer 
 public static int hitta_plats(int personnumber)
@@ -168,20 +173,22 @@ private static void calculateprofit (){
       double vinst=0; 
       double biljetpris=0; 
       int antalbiljetter = 0; 
-      float ålder=0;
+      int  ålder=0;
          for (int i=0 ; i<platser.length ; i++){
             if(platser[i]!=0 && platser[i]!=1){
-              ålder= platser[i]/10000;
-               int birthyear = (int)ålder;
+               int birthyear= platser[i]/10000;
+                System.out.println("birthyear:"+birthyear);
                int age = 2023-birthyear; 
+               System.out.println("ager:"+age);
                      System.out.println("platsen är bokad");
                      antalbiljetter++ ;
-                     if(age>=18 && ålder<69){
+                     if(age>=12 && age<69){
                          vuxenbiljett++;
                          
                        }
-                     if( ålder>69){
+                     if( age>69){
                          pasionarbiljett++; 
+                         
                          
                         }
                      if(age<12){
@@ -194,7 +201,7 @@ private static void calculateprofit (){
         double seniorProfit = pasionarbiljett * SENIOR_pris;
         double totalProfit = adultProfit + childProfit + seniorProfit;
         
-         System.out.println("Profit breakdown:");
+        System.out.println("Profit breakdown:");
         System.out.println("Adult tickets: " + vuxenbiljett+ " (Profit: " + adultProfit + ")");
         System.out.println("Child tickets: " + barnbiljett + " (Profit: " + childProfit + ")");
         System.out.println("Senior tickets: " + pasionarbiljett+ " (Profit: " + seniorProfit + ")");
@@ -203,22 +210,26 @@ private static void calculateprofit (){
         private static void listAgeGroup() {
             int ålder=0;
         for (int personnumber : platser)
+        {
             if(personnumber !=0 && personnumber!=1){
               int birthYear = personnumber / 10000;
-               int birthyear = (int)ålder;
-               int age = 2023-birthyear; 
-            String ageGroup;
-            if (age < 12) {
-                ageGroup = "Child";
-            } else if (age < 18) {
-                ageGroup = "Teen";
-            } else if (age>=18 && ålder<69) {
-                ageGroup = "Adult";
-            } else {
-                ageGroup = "Senior";
+               int age = 2023-birthYear; 
+             String ageGroup;
+               if (age < 12) {
+                 ageGroup = "Child";
+               }
+             else if (age < 18) {
+                 ageGroup = "Teen";
+                } 
+             else if (age>=18 && age<69) {
+                 ageGroup = "Adult";
+               } 
+             else {
+                  ageGroup = "Senior";
+                 }
+            System.out.println("Age: "+age+" Person number: " + personnumber + ", Age group: " + ageGroup);
             }
-            System.out.println("Person number: " + personnumber + ", Age group: " + ageGroup);
-        }
+         }
     }
 }
 
